@@ -5,10 +5,10 @@
 void launch(struct Server *my_server){
 
    //char buffer[30000];
-   char *server_msg[30]= "HTTP1.1/ 200 OK";
+   char server_msg[30] = "HTTP1.1/ 200 OK";
 
    while(1){
-      prinf("====== WAITING FOR CONNECTION ========\n");
+      printf("====== WAITING FOR CONNECTION ========\n");
       int address_len = sizeof(my_server->address);
 
       //Before to create a new socket, we need to accept the server socket.

@@ -1,11 +1,11 @@
 #Makefile CLIENT
-all: program_client
+all: program
 
-program_client: test_client.o Cliente.o 
-	gcc -o test_client.o Cliente.o 
+program: main.o Cliente.o 
+	gcc -o main.o Cliente.o 
 
-test_client.o: test_client.c Cliente.h
-	gcc -c test_client.c
+main.o: main.c Cliente.h
+	gcc -c main.c
 
 Cliente.o: Cliente.c Cliente.h
 	gcc -c Cliente.c
