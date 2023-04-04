@@ -1,11 +1,13 @@
 #include "Server.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 void launch(struct Server *my_server){
 
    //char buffer[30000];
    char server_msg[30] = "HTTP1.1/ 200 OK";
+   char client_request[1048];
 
    while(1){
       printf("====== WAITING FOR CONNECTION ========\n");
@@ -17,10 +19,13 @@ void launch(struct Server *my_server){
 
       //Now we have a client that we can send data to:
       send(client_socket, server_msg, sizeof(server_msg), 0);
-      close(my_server->socket);
+      //close(my_server->socket);
 
-      //read(new_socket, buffer, 30000);
-      //printf("%s\n", buffer);
+      while(1){
+         read(client_socket, client_request, sizeof(client_request));
+         printf("%s\n", client_request);
+      };
+
 
    };
 
