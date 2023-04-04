@@ -20,10 +20,11 @@ void launch(struct Server *my_server){
       send(client_socket, server_msg, sizeof(server_msg), 0);
       //close(my_server->socket);
 
-
+      while(1){
       read(client_socket, mensaje, sizeof(mensaje));
       printf("%s\n", mensaje);
-
+      }
+      
    };
 
    
