@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 struct Server server_contructor(int domain, int service, int protocol, int port, unsigned long interf, int backlog, void (*launch)(struct Server *server)){
+   //FILE *html_data;
 
    struct Server server;
    server.domain = domain;

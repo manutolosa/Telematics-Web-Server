@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+char mensaje[1048];
 void launch(struct Server *my_server){
 
    //char buffer[30000];
@@ -17,10 +18,11 @@ void launch(struct Server *my_server){
 
       //Now we have a client that we can send data to:
       send(client_socket, server_msg, sizeof(server_msg), 0);
-      close(my_server->socket);
+      //close(my_server->socket);
 
-      //read(new_socket, buffer, 30000);
-      //printf("%s\n", buffer);
+
+      read(client_socket, mensaje, sizeof(mensaje));
+      printf("%s\n", mensaje);
 
    };
 
