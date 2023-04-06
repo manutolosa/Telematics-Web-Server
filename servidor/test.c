@@ -3,7 +3,9 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <string.h>
+#include <stdbool.h>
 
+bool flag = false;
 struct datos{
 	int dclient_socket;
 	char drequest[1048];
@@ -18,6 +20,7 @@ void* request_handler(void* datos){
    */
    if(strcmp((*d2).drequest,"EXIT\n") == 0){ //Hay que tener cuidado, la funcion fgets deja almacenado los saltos de linea \n
       printf("Connection should end\n");
+      flag = true;
       close((*d2).dclient_socket);  //cierra conexion con el cliente
    }
    return NULL;
@@ -52,9 +55,12 @@ void launch(struct Server *my_server){
       strcpy(d1.drequest,request);
       pthread_create(&thread_request,NULL,request_handler,(void *)&d1); //Mando a un nuevo hilo la ultima request
       //printf("%s", request);
-      printf("Salio del hilo\n"); 
+      printf("Salio del hilo\n");
+         if(flag==1){
+            return 0;
+         }
       }
-      close(my_server->socket);
+
    };
 
    
