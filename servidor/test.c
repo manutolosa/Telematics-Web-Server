@@ -12,17 +12,32 @@ struct datos{
 };
 
 void* request_handler(void* datos){
+   
    struct datos *d2 = (struct datos*)datos;
    printf("Entrò correctamente al hilo\n");
    printf(" Request: %s\n", (*d2).drequest);
    /**
     * Aqui debe ir el parsing
    */
-   if(strcmp((*d2).drequest,"EXIT\n") == 0){ //Hay que tener cuidado, la funcion fgets deja almacenado los saltos de linea \n
-      printf("Connection should end\n");
+  if(strcmp((*d2).drequest,"GET\n") == 0){ //Hay que tener cuidado, la funcion fgets deja almacenado los saltos de linea \n
+       char respuesta[1048] = "<HTML><body>THIS IS A DEFAULT PAGE</body></HTML>";
+       //while(1){
+      send((*d2).dclient_socket,respuesta,sizeof(respuesta),0);
+      // }
+  }
+   else if(strcmp((*d2).drequest,"EXIT\n") == 0){
+      printf("Terminando conexion\n");
+      close((*d2).dclient_socket);
       flag = true;
-      close((*d2).dclient_socket);  //cierra conexion con el cliente
-   }
+   }   
+   
+   else{
+      printf("Peticion no reconocida\n");
+      char respuesta[1048] = "Error 400";
+      send((*d2).dclient_socket,respuesta,sizeof(respuesta),0);
+      //close((*d2).dclient_socket);  //cierra conexion con el cliente
+
+   } 
    return NULL;
 }
 
@@ -57,21 +72,15 @@ void launch(struct Server *my_server){
       //printf("%s", request);
       printf("Salio del hilo\n");
          if(flag==1){
-            return 0;
+            return NULL;
          }
       }
 
    };
-
-   
-
-
 };
 
 int main(){
 
    struct Server my_server = server_contructor(AF_INET, SOCK_STREAM, 0, 80, INADDR_ANY, 10 , launch);
    my_server.launch(&my_server);
-
-   
 }
