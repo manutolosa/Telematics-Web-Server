@@ -14,7 +14,7 @@ struct datos{
 void* request_handler(void* datos){
    
    struct datos *d2 = (struct datos*)datos;
-   printf("Entrò correctamente al hilo\n");
+   printf("Entro correctamente al hilo\n");
    printf(" Request: %s\n", (*d2).drequest);
    /**
     * Aqui debe ir el parsing
@@ -72,6 +72,7 @@ void launch(struct Server *my_server){
       //printf("%s", request);
       printf("Salio del hilo\n");
          if(flag==1){
+            close(my_server->socket);
             return NULL;
          }
       }
@@ -79,8 +80,8 @@ void launch(struct Server *my_server){
    };
 };
 
-int main(){
+int main(int argc,char *argv[]){
 
-   struct Server my_server = server_contructor(AF_INET, SOCK_STREAM, 0, 80, INADDR_ANY, 10 , launch);
+   struct Server my_server = server_contructor(AF_INET, SOCK_STREAM, 0, atoi(argv[1]), INADDR_ANY, 10 , launch);
    my_server.launch(&my_server);
 }
