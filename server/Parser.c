@@ -24,7 +24,7 @@ void isGET(struct Parser my_parser, int client_socket){
 
     char response[64] = "\nHTTP /1.1 200 OK\nServer: TWS/1.0 ()\nConnection Type: Upgrade\n\n";
     //send(client_socket, response, sizeof(response), 0);
-    printf("%s\n", response);
+    printf("%s", response);
     char* ruta = URI_checker(my_parser);
    // printf("RUTA: %s\n", ruta);
     
@@ -39,18 +39,23 @@ void isGET(struct Parser my_parser, int client_socket){
             printf("%c", char_leido);
         };
 
-    }      
+    }   
+    printf("\n");
+    fclose(response_FILE);
+    modify_logger(my_parser);
 
 };
 
 
 
-void isPOST(){
+void isPOST(struct Parser my_parser){
     printf("Recibí un POST\n");
+    modify_logger(my_parser);
 };
 
-void isHEAD(){
+void isHEAD(struct Parser my_parser){
     printf("Recibí un HEAD\n");
+    modify_logger(my_parser);
 };
 
 void method_checker(struct Parser my_parser, int client_socket){
@@ -61,11 +66,11 @@ void method_checker(struct Parser my_parser, int client_socket){
 
     }else if (strcmp(my_parser.method, "POST") == 0){
         printf("Recibí un POST\n");
-        isPOST();
+        isPOST(my_parser);
 
     }else if(strcmp(my_parser.method, "HEAD") == 0){
         printf("Recibí un HEAD\n");
-        isHEAD();
+        isHEAD(my_parser);
     }else{
         perror("HTTP/1.1 400 Bad Request -> Method\n");
     }
@@ -92,3 +97,29 @@ char* URI_checker(struct Parser my_parser){
     return my_parser.URI;
 
 };
+
+void modify_logger(struct Parser my_parser){
+
+
+    FILE *logger_FILE = fopen("logger.txt", "a+");
+    if (logger_FILE == NULL){
+        perror("No se pudo modificar el logger");
+    }else{
+        fputs("A ", logger_FILE);
+        fputs(my_parser.method, logger_FILE);
+        fputs(" was processed\n", logger_FILE);
+
+    }
+    fclose(logger_FILE);
+/*
+    fopen("logger.txt", "r");
+    printf("El contenido del logger es:\n");
+
+    while(!feof(logger_FILE)){
+        int char_leido = fgetc(logger_FILE);
+        printf("%c", char_leido);
+    };      
+    //printf("\n");
+    fclose(logger_FILE);
+*/
+}

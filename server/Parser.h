@@ -20,7 +20,9 @@ char* URI_checker(struct Parser my_parser);
 void version_checker(struct Parser my_parser);  
 
 void isGET(struct Parser my_parser, int client_socket);                                  
-void isPOST();                                   
-void isHEAD();  
+void isPOST(struct Parser my_parser);                                   
+void isHEAD(struct Parser my_parser);  
+
+void modify_logger(struct Parser my_parser);
    
 #endif
