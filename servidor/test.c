@@ -19,13 +19,22 @@ void* request_handler(void* datos){
    /**
     * Aqui debe ir el parsing
    */
-  if(strcmp((*d2).drequest,"GET\n") == 0){ //Hay que tener cuidado, la funcion fgets deja almacenado los saltos de linea \n
-       char respuesta[1048] = "<HTML><body>THIS IS A DEFAULT PAGE</body></HTML>";
+
+  //if(strcmp((*d2).drequest,"GET\n") == 0){ //Hay que tener cuidado, la funcion fgets deja almacenado los saltos de linea \n
+      FILE *request_FILE = fopen("cLain_dither.png", "rb");
+      char buffer[128];
+	   char response_data[1000000] = {"\0"};
+      strcat(response_data,"Server: TWS/1.0 ()\nConnection Type: Upgrade\n\n");
+	   while(fgets(buffer,sizeof(buffer),request_FILE)){
+		strcat(response_data,buffer);	
+	//}
+      fclose(request_FILE);  
+     // printf("%s",response_data);
        //while(1){
-      send((*d2).dclient_socket,respuesta,sizeof(respuesta),0);
+      send((*d2).dclient_socket,response_data,sizeof(response_data),0);
       // }
   }
-   else if(strcmp((*d2).drequest,"EXIT\n") == 0){
+    if(strcmp((*d2).drequest,"EXIT\n") == 0){
       printf("Terminando conexion\n");
       close((*d2).dclient_socket);
       flag = true;
@@ -34,7 +43,7 @@ void* request_handler(void* datos){
    else{
       printf("Peticion no reconocida\n");
       char respuesta[1048] = "Error 400";
-      send((*d2).dclient_socket,respuesta,sizeof(respuesta),0);
+     // send((*d2).dclient_socket,respuesta,sizeof(respuesta),0);
       //close((*d2).dclient_socket);  //cierra conexion con el cliente
 
    } 
@@ -46,7 +55,7 @@ void* request_handler(void* datos){
 void launch(struct Server *my_server){
    pthread_t thread_request; 
    char request[1048];
-   char server_msg[30] = "HTTP1.1/ 200 OK";
+   char server_msg[30] = "HTTP/1.1 200 OK";
 
    while(1){
       printf("====== WAITING FOR CONNECTION ========\n");
@@ -73,7 +82,7 @@ void launch(struct Server *my_server){
       printf("Salio del hilo\n");
          if(flag==1){
             close(my_server->socket);
-            return NULL;
+            return;
          }
       }
 
@@ -84,4 +93,5 @@ int main(int argc,char *argv[]){
 
    struct Server my_server = server_contructor(AF_INET, SOCK_STREAM, 0, atoi(argv[1]), INADDR_ANY, 10 , launch);
    my_server.launch(&my_server);
+   return 0;
 }
