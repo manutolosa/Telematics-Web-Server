@@ -23,17 +23,6 @@ struct Client client_contructor(int domain, int service, int protocol, int port,
 
    //SOCKET socket(int af, int type, int protocol) -> Creates a socket communication with the network 
 
-   if ( (connect(client.socket, (struct sockaddr*)&client.address, sizeof(client.address))) < 0){
-    perror("Failed to connect to the remote socket...");
-
-   };
-
-   //receive data from the server.
-   char server_response[256];
-   recv(client.socket, &server_response, sizeof(server_response), 0); 
-
-
-    //Print out the server's response
-    printf("%s\n", server_response);
+ 
    return client;   
 };

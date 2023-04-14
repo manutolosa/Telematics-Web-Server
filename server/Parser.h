@@ -15,11 +15,11 @@ struct Parser{
 
 struct Parser parser_constructor(char* request_line);
 
-void method_checker(struct Parser my_parser, int client_socket);    
+void method_checker(struct Parser my_parser);    
 char* URI_checker(struct Parser my_parser);                                                                 
 void version_checker(struct Parser my_parser);  
 
-void isGET(struct Parser my_parser, int client_socket);                                  
+void isGET(struct Parser my_parser);                                  
 void isPOST(struct Parser my_parser);                                   
 void isHEAD(struct Parser my_parser);  
 

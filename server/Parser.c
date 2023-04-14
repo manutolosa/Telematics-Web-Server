@@ -16,32 +16,36 @@ struct Parser parser_constructor(char* request_line){
     return parser;
 };
 
-void isGET(struct Parser my_parser, int client_socket){
+void isGET(struct Parser my_parser){
     //printf("Recibí un GET\n");
 
     //char* ruta = "resources/img/2017-12-19-19-22-29.jpg";
     //char* ruta = "resources/index.html";
 
-    char response[64] = "\nHTTP /1.1 200 OK\nServer: TWS/1.0 ()\nConnection Type: Upgrade\n\n";
+    //char response[64] = "\nHTTP /1.1 200 OK\nServer: TWS/1.0 ()\nConnection Type: Upgrade\n\n";
     //send(client_socket, response, sizeof(response), 0);
-    printf("%s", response);
+    //printf("%s", response);
     char* ruta = URI_checker(my_parser);
    // printf("RUTA: %s\n", ruta);
     
 
-    FILE *response_FILE = fopen(ruta, "r");
+    FILE *response_FILE = fopen(ruta, "rb");
+    FILE *response_GENERATION = fopen("response_GENERATION.txt", "a");
+
     if (response_FILE == NULL){
         perror("HTTP /1.1 404 File/Page not found :(");
     }else{
+        fputs("\n", response_GENERATION);
 
         while(!feof(response_FILE)){
             int char_leido = fgetc(response_FILE);
-            printf("%c", char_leido);
+            fputc(char_leido, response_GENERATION);
         };
 
     }   
     printf("\n");
     fclose(response_FILE);
+    fclose(response_GENERATION);
     modify_logger(my_parser);
 
 };
@@ -58,23 +62,22 @@ void isHEAD(struct Parser my_parser){
     modify_logger(my_parser);
 };
 
-void method_checker(struct Parser my_parser, int client_socket){
+void method_checker(struct Parser my_parser){
     //printf("%s\n", my_parser.method);
-    
-    if (strcmp(my_parser.method, "GET") == 0){
-        isGET(my_parser, client_socket);
 
-    }else if (strcmp(my_parser.method, "POST") == 0){
+    if (strcmp(my_parser.method, "GET") == 0){
+        isGET(my_parser);
+
+      }else if (strcmp(my_parser.method, "POST") == 0){
         printf("Recibí un POST\n");
         isPOST(my_parser);
 
-    }else if(strcmp(my_parser.method, "HEAD") == 0){
+      }else if(strcmp(my_parser.method, "HEAD") == 0){
         printf("Recibí un HEAD\n");
         isHEAD(my_parser);
-    }else{
+      }else{
         perror("HTTP/1.1 400 Bad Request -> Method\n");
-    }
-
+      }
 
     
 };      
@@ -114,7 +117,6 @@ void modify_logger(struct Parser my_parser){
 /*
     fopen("logger.txt", "r");
     printf("El contenido del logger es:\n");
-
     while(!feof(logger_FILE)){
         int char_leido = fgetc(logger_FILE);
         printf("%c", char_leido);

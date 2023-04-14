@@ -23,25 +23,6 @@ struct Server server_contructor(int domain, int service, int protocol, int port,
 
    //SOCKET socket(int af, int type, int protocol) -> Creates a socket communication with the network 
 
-
-   if (server.socket == 0){
-      perror("Failed to connect the socket...\n");
-      exit(1);
-   };
-
-
-   //Once we create the socket it is necesary to bind(vincularlo) it to the network -> connect()   
-   if ( (bind(server.socket, (struct sockaddr*)&server.address, sizeof(server.address))) < 0 ){
-      perror("Failed to bind socket...\n");
-      exit(1);
-   };
-
-   
-   if ( (listen(server.socket, server.backlog)) < 0){
-      perror("Failed to start listening...\n");
-      exit(1);
-   }
-
    server.launch=launch;
 
 

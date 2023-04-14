@@ -1,0 +1,6 @@
+1. Logger -> TIME, funcion, resultado.
+2. En que momento cerrar la conexión
+3. Funcionamiento POST - HEAD
+4. Routing
+5. Mantener el socket activo
+7. No manda la respuesta
