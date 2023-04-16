@@ -22,8 +22,8 @@ void isGET(struct Parser my_parser, int client_socket){
     //char* ruta = "resources/img/2017-12-19-19-22-29.jpg";
     //char* ruta = "resources/index.html";
     char buffer[262144] = {"\0"};
-    char response[64] = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
-    strcpy(buffer,response);
+    char* response = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
+    //strcpy(buffer,response);
     //strcat(buffer,response);
    // send(client_socket, response, sizeof(response), 0);
     //printf("%s", response);
@@ -41,7 +41,6 @@ void isGET(struct Parser my_parser, int client_socket){
      //       index++;
       //      //printf("%c", char_leido);
        // };
-
    // }
     FILE* file = fopen(ruta, "r");
 
@@ -56,20 +55,31 @@ void isGET(struct Parser my_parser, int client_socket){
 	fseek(file, 0, SEEK_SET);
 
 	char* temp = malloc(sizeof(char) * (fsize+1));
-	char ch;
-	int i = 0;
+    //strcat(temp,response);
+    //printf("Headers: ");
+    //printf("%s",temp);
+	//char ch;
+	//int i = 0;
 	//while((ch = fgetc(file)) != EOF) {
 //		temp[i] = ch;
 //		i++;
 //	}
     fread(temp,fsize,1,file);
-       
+   // printf("Leido: ");
+    //printf("%s",temp);
+    strcpy(buffer,response);
+    strcat(buffer,temp);
+    //strcat(buffer,"\r\n\r\n");
+    //printf("File Size: %l",fsize+1);
+    printf("buffer: ");
+    printf("%s",buffer);
+    //send(client_socket, buffer, sizeof(buffer), 0);   
     //send(client_socket, temp, fsize, 0);
     
 	fclose(file);
-    printf("%s",temp);
-    strcat(buffer,temp);
-    
+   // printf("%s",buffer);
+
+   
 	
     //strcat(response, "\r\n\r\n");   
     //printf("\n");
@@ -78,9 +88,10 @@ void isGET(struct Parser my_parser, int client_socket){
     //strcpy(html,"<html><body>Este es un test</body></html>\n");
     //printf("%s",html);
     //char buffer2[1084] = "<html><body>Este es un test</body></html>\n";
-    send(client_socket, buffer, sizeof(buffer), 0);
+   send(client_socket, buffer, strlen(buffer), 0);
     //fclose(response_FILE);
     modify_logger(my_parser);
+  //  free(temp);
 
 };
 
