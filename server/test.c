@@ -7,7 +7,7 @@
 void launch(struct Server *my_server){
 
 
-   char* server_msg = "Trying INADDR_ANY...\nConnected to Telematis Web Server.";
+   //char* server_msg = "Trying INADDR_ANY...\nConnected to Telematis Web Server.";
    char client_request[1048];
 
    while(1){
@@ -19,15 +19,16 @@ void launch(struct Server *my_server){
       int client_socket = accept(my_server->socket, (struct sockaddr *)&my_server->address, (socklen_t *)&address_len );
 
       //Now we have a client that we can send data to:
-      send(client_socket, server_msg, strlen(server_msg), 0);
+     // send(client_socket, server_msg, strlen(server_msg), 0);
       //write(client_socket, server_msg, strlen(server_msg));
 
-      //read(client_socket, client_request, sizeof(client_request));
-      recv(client_socket, &client_request, sizeof(client_request), 0); 
+      read(client_socket, client_request, sizeof(client_request));
+      //recv(client_socket, &client_request, sizeof(client_request), 0); 
+      printf("%s",client_request);
       struct Parser my_parser = parser_constructor(client_request);
       version_checker(my_parser);
       method_checker(my_parser, client_socket);
-      
+      close(client_socket);
       
 
       
