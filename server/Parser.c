@@ -4,17 +4,8 @@
 #include <string.h>
 #include <time.h>
 
-struct Parser parser_constructor(char* request_line){
 
-    struct Parser parser;
-    parser.method = strtok(request_line, " ");
-    parser.URI = strtok(NULL, " ");
-    parser.version = strtok(NULL, " "); 
-    
-    
 
-    return parser;
-};
 
 void isGET(struct Parser my_parser, int client_socket){
     //printf("Recibí un GET\n");
@@ -28,8 +19,16 @@ void isGET(struct Parser my_parser, int client_socket){
    // send(client_socket, response, sizeof(response), 0);
     //printf("%s", response);
     char* ruta = URI_checker(my_parser);
-   // printf("RUTA: %s\n", ruta);
+    char* ext = token(ruta, ".");
+    //strcpy(ext,ruta);
+/*
+    while(ext[0] != '.'){
+        ext[0] = ext[1];
+    };
+
+    printf("EXTENCIÓN-> %s", ext);
     
+  */  
     
  //   FILE *response_FILE = fopen(ruta, "r");
  //   if (response_FILE == NULL){
@@ -45,7 +44,8 @@ void isGET(struct Parser my_parser, int client_socket){
     FILE* file = fopen(ruta, "r");
 
 	if (file == NULL) {
-		perror("HTTP /1.1 404 File/Page not found :(");
+        send(client_socket, my_parser.fail_response_404, sizeof(my_parser.fail_response_404), 0);
+        close(client_socket);
 	}else {
 		printf("%s does exist \n", ruta);
 	}
@@ -97,6 +97,7 @@ void isGET(struct Parser my_parser, int client_socket){
 
 
 
+
 void isPOST(struct Parser my_parser){
     printf("Recibí un POST\n");
     modify_logger(my_parser);
@@ -107,36 +108,8 @@ void isHEAD(struct Parser my_parser){
     modify_logger(my_parser);
 };
 
-void method_checker(struct Parser my_parser, int client_socket){
-    //printf("%s\n", my_parser.method);
-    
-    if (strcmp(my_parser.method, "GET") == 0){
-        isGET(my_parser, client_socket);
-
-    }else if (strcmp(my_parser.method, "POST") == 0){
-        printf("Recibí un POST\n");
-        isPOST(my_parser);
-
-    }else if(strcmp(my_parser.method, "HEAD") == 0){
-        printf("Recibí un HEAD\n");
-        isHEAD(my_parser);
-    }else{
-        perror("HTTP/1.1 400 Bad Request -> Method\n");
-    }
 
 
-    
-};      
-
-
-void version_checker(struct Parser my_parser){
-    //printf("%s", my_parser.version);
-
-    if(strcmp(my_parser.version, "HTTP/1.1\n") < 0 || strcmp(my_parser.version, "HTTP/1.1\n") > 0){
-       // perror("HTTP/1.1 400 Bad Request -> Version\n");
-    }
-
-};
 
 char* URI_checker(struct Parser my_parser){
     for(int i = 0; i < strlen(my_parser.URI); i++ ){
