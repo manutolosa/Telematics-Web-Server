@@ -15,8 +15,6 @@
 
       struct sockaddr_in address;
 
-      int socket;
-
 
    };
 
