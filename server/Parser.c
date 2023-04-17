@@ -42,7 +42,7 @@ void isGET(struct Parser my_parser, int client_socket){
       //      //printf("%c", char_leido);
        // };
    // }
-    FILE* file = fopen(ruta, "r");
+    FILE* file = fopen(ruta, "rb");
 
 	if (file == NULL) {
 		perror("HTTP /1.1 404 File/Page not found :(");
@@ -69,6 +69,8 @@ void isGET(struct Parser my_parser, int client_socket){
     //printf("%s",temp);
     strcpy(buffer,response);
     strcat(buffer,temp);
+    //strcat(buffer,temp);
+    //sprintf(buffer,response,temp,fsize);
     //strcat(buffer,"\r\n\r\n");
     //printf("File Size: %l",fsize+1);
     printf("buffer: ");
