@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.tcc": "c",
+        "exception": "c",
+        "functional": "c",
+        "iosfwd": "c",
+        "mutex": "c",
+        "stdexcept": "c",
+        "system_error": "c",
+        "tuple": "c",
+        "*.def": "c",
+        "algorithm": "c"
+    }
+}
