@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <stdlib.h>s
-
+#include <stdlib.h>
+#include <pthread.h>
 
 
 char* response = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
@@ -25,9 +25,9 @@ void HTTP_handler(struct Token my_token, char* request_line, int client_socket){
     my_token.URI = strtok(NULL, " ");
     my_token.version = strtok(NULL, " "); 
     
-
-    if(strcmp(my_token.version, "HTTP/1.1\n") < 0 || strcmp(my_token.version, "HTTP/1.1\n") > 0){
-      perror("HTTP/1.1 400 Bad request -> Version");
+    printf("version: %s",my_token.version);
+    if(strcmp(my_token.version, "HTTP/1.1") == 0 ){
+      perror("HTTP/1.1 400 Bad request -> Version\n");
     }else{
       printf("La versión fue verificada\n");
     }
@@ -47,7 +47,8 @@ void HTTP_handler(struct Token my_token, char* request_line, int client_socket){
         FILE* file = fopen(my_token.URI, "r");
 
 	    if (file == NULL) {
-            perror("HTTP/1.1 404 File Not found :(");
+            file = fopen("resources/error404.html", "r");
+     //       perror("HTTP/1.1 404 File Not found :(");
 	    }else {
 		    printf("%s does exist \n", my_token.URI);
 	}
