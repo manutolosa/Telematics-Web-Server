@@ -15,42 +15,48 @@ struct Token{
     char* method;
     char* URI;
     char* version; 
-
+    int pclient_socket;
+    char* request_line;
 };
+//int flag;
 
-
-void HTTP_handler(struct Token my_token, char* request_line, int client_socket){
-
-    my_token.method = strtok(request_line, " ");
-    my_token.URI = strtok(NULL, " ");
-    my_token.version = strtok(NULL, " "); 
+void* HTTP_handler(void* args){
+    flag = 0;
+    struct Token *my_token = (struct Token *)args;
     
-    printf("version: %s",my_token.version);
-    if(strcmp(my_token.version, "HTTP/1.1") == 0 ){
+    
+   // printf("Client Sokcket: %i",(*my_token).pclient_socket);
+  //  printf("Client Request: %s",(*my_token).request_line);
+    (*my_token).method = strtok((*my_token).request_line, " ");
+    (*my_token).URI = strtok(NULL, " ");
+    (*my_token).version = strtok(NULL, " "); 
+    
+    printf("version: %s",(*my_token).version);
+    if(strcmp((*my_token).version, "HTTP/1.1") == 0 ){
       perror("HTTP/1.1 400 Bad request -> Version\n");
     }else{
       printf("La versión fue verificada\n");
     }
 
     
-    for(int i = 0; i < strlen(my_token.URI); i++ ){
-        my_token.URI[i] = my_token.URI[i+1];
+    for(int i = 0; i < strlen((*my_token).URI); i++ ){
+        (*my_token).URI[i] = (*my_token).URI[i+1];
     }
 
-    printf("%s", my_token.URI);
+    printf("%s", (*my_token).URI);
     
     
 
     
-    if (strcmp(my_token.method, "GET") == 0){
+    if (strcmp((*my_token).method, "GET") == 0){
         printf("Recibí un GET\n");
-        FILE* file = fopen(my_token.URI, "r");
+        FILE* file = fopen((*my_token).URI, "r");
 
 	    if (file == NULL) {
             file = fopen("resources/error404.html", "r");
      //       perror("HTTP/1.1 404 File Not found :(");
 	    }else {
-		    printf("%s does exist \n", my_token.URI);
+		    printf("%s does exist \n", (*my_token).URI);
 	}
 
 	fseek(file, 0, SEEK_END);
@@ -65,21 +71,22 @@ void HTTP_handler(struct Token my_token, char* request_line, int client_socket){
     printf("%s",buffer_response);
     
 	fclose(file);
-    send(client_socket, buffer_response, strlen(buffer_response), 0);
+    send((*my_token).pclient_socket, buffer_response, strlen(buffer_response), 0);
+    //flag = 1;
+    
 
 
-
-    }else if (strcmp(my_token.method, "POST") == 0){
+    }else if (strcmp((*my_token).method, "POST") == 0){
         printf("Recibí un POST\n");
 
-    }else if(strcmp(my_token.method, "HEAD") == 0){
+    }else if(strcmp((*my_token).method, "HEAD") == 0){
         printf("Recibí un HEAD\n");
     }else{
         perror("HTTP/1.1 400 Bad request -> Method");
     }
-
+    close((*my_token).pclient_socket);
     
-};   
+}   
     
 
 
@@ -104,13 +111,22 @@ void launch(struct Server *my_server){
       read(client_socket, client_request, sizeof(client_request));
       //recv(client_socket, &client_request, sizeof(client_request), 0); 
       printf("%s",client_request);
+      
+      pthread_t hilo_htpp;
       struct Token my_token;
-      HTTP_handler(my_token, client_request, client_socket);
+      strcpy(my_token.request_line,client_request);
+      my_token.pclient_socket = client_socket;
+      pthread_create(&hilo_htpp,NULL,HTTP_handler,(void *)&my_token);
+      //HTTP_handler(my_token, client_request, client_socket);
       
-      
+  // while(1){
+   //     if(flag == 1){
+   //         break;
+   //     }
+   // }
       
 
-      close(client_socket);
+      //close(client_socket);
       
 
 
