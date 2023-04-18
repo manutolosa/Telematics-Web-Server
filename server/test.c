@@ -21,7 +21,7 @@ struct Token{
 //int flag;
 
 void* HTTP_handler(void* args){
-    flag = 0;
+    //flag = 0;
     struct Token *my_token = (struct Token *)args;
     
     
@@ -77,6 +77,8 @@ void* HTTP_handler(void* args){
 
 
     }else if (strcmp((*my_token).method, "POST") == 0){
+        send((*my_token).pclient_socket,  response, strlen(response), 0);
+
         printf("Recibí un POST\n");
 
     }else if(strcmp((*my_token).method, "HEAD") == 0){
