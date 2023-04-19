@@ -9,7 +9,7 @@
 char* response = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
 char buffer_response[262144] = {"\0"};
 char client_request[1048];
-
+char* temp_response;
 struct Token{
 
     char* method;
@@ -18,16 +18,19 @@ struct Token{
     char* mime;
     int pclient_socket;
     char* request_line;
+    int sizeofrequest;
+    //char* request_body; //Por alguna razon desconocida, crear esta variable crea un error de segmentacion siempre.
 };
-//int flag;
 
 void* HTTP_handler(void* args){
     struct Token *my_token = (struct Token *)args;
-    
+    temp_response = malloc((*my_token).sizeofrequest + 1);
+    memcpy(temp_response,(*my_token).request_line,(*my_token).sizeofrequest);
+   // printf("REMP RESPONSE ANTES: %s\n",temp_response);
     (*my_token).method = strtok((*my_token).request_line, " ");
     (*my_token).URI = strtok(NULL, " ");
     (*my_token).version = strtok(NULL, " "); 
-    
+    //(*my_token).request_body = strtok(NULL, " ");
   //  printf("version: %s",(*my_token).version);
   //  if(strcmp((*my_token).version, "HTTP/1.1") == 0 ){
   //    perror("HTTP/1.1 400 Bad request -> Version\n");
@@ -44,7 +47,7 @@ void* HTTP_handler(void* args){
     printf("RUTA ->%s\n", (*my_token).URI);
     printf("MIME ->%s\n", (*my_token).mime);
 
-            if (strcmp((*my_token).mime, ".html") == 0 || strcmp((*my_token).mime, ".html") == 0){
+            if (strcmp((*my_token).mime, ".html") == 0 || strcmp((*my_token).mime, ".htm") == 0){
             response = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
         }else if (strcmp((*my_token).mime, ".css") == 0){
             response = "HTTP/1.1 200 OK\r\nContent-type: text/css\r\n\r\n";
@@ -185,16 +188,22 @@ void* HTTP_handler(void* args){
     printf("%s",buffer_response);
     
 	fclose(file);
-    send((*my_token).pclient_socket, buffer_response, strlen(buffer_response), 0);
-    send((*my_token).pclient_socket, temp, fsize, 0);
+    while(send((*my_token).pclient_socket, buffer_response, strlen(buffer_response), 0) == -1){
+        perror("no se envio\n");
+    }
+    while(send((*my_token).pclient_socket, temp, fsize, 0) == -1){
+        perror("no se envio\n");
+    }
+    free(temp);
     //flag = 1;
     
 
 
     }else if (strcmp((*my_token).method, "POST") == 0){
-        send((*my_token).pclient_socket,  response, strlen(response), 0);
-
         printf("Recibí un POST\n");
+       // (*my_token).request_body = strstr(temp_response, "\r\n\r\n");
+     //   printf("BODY: /%s\n", (*my_token).request_body);
+        send((*my_token).pclient_socket,  response, strlen(response), 0);
 
     }else if(strcmp((*my_token).method, "HEAD") == 0){
         printf("Recibí un HEAD\n");
@@ -202,6 +211,7 @@ void* HTTP_handler(void* args){
         perror("HTTP/1.1 400 Bad request -> Method");
     }
     close((*my_token).pclient_socket);
+    free(temp_response);
     
 }   
     
@@ -227,19 +237,20 @@ void launch(struct Server *my_server){
 
       read(client_socket, client_request, sizeof(client_request));
       //recv(client_socket, &client_request, sizeof(client_request), 0); 
-      printf("%s",client_request);
+      //printf("%s",client_request);
       
       pthread_t hilo_htpp;
       struct Token my_token;
       strcpy(my_token.request_line,client_request);
+      my_token.sizeofrequest = sizeof(client_request);
       my_token.pclient_socket = client_socket;
       pthread_create(&hilo_htpp,NULL,HTTP_handler,(void *)&my_token);
       //HTTP_handler(my_token, client_request, client_socket);
       
-  // while(1){
-   //     if(flag == 1){
-   //         break;
-   //     }
+   //while(1){
+     //  if(flag == 1){
+       //     break;
+      //  }
    // }
       
 
