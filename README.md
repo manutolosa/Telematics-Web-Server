@@ -2,6 +2,10 @@
 # Proyecto 1
 
 **Table of Contents**
+#Introducción
+##Desarrollo
+###Conclusiones
+####Referencias
 
 #Introducción
 
