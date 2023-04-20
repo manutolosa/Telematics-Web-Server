@@ -1,7 +1,7 @@
 
 # Proyecto 1
 
-# Introducción
+# **_Introducción_**
 
 La capa de aplicación de la arquitectura TCP/IP es una de las más importantes, ya que permite la comunicación entre aplicaciones a través de una red de computadoras. Esta capa incluye una variedad de protocolos, como HTTP, FTP, SMTP, DNS, entre otros, que son esenciales para el funcionamiento de internet y la transferencia de datos entre dispositivos. 
 
