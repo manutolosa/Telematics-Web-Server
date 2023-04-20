@@ -10,6 +10,7 @@ char* response = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
 char buffer_response[262144] = {"\0"};
 char client_request[1048];
 char* temp_response;
+char* body_response;
 struct Token{
 
     char* method;
@@ -19,17 +20,18 @@ struct Token{
     int pclient_socket;
     char* request_line;
     int sizeofrequest;
-    //char* request_body; //Por alguna razon desconocida, crear esta variable crea un error de segmentacion siempre.
+    //char* body_response; //Por alguna razon desconocida, crear esta variable crea un error de segmentacion siempre.
 };
 
 void* HTTP_handler(void* args){
     struct Token *my_token = (struct Token *)args;
     temp_response = malloc((*my_token).sizeofrequest + 1);
     memcpy(temp_response,(*my_token).request_line,(*my_token).sizeofrequest);
-   // printf("REMP RESPONSE ANTES: %s\n",temp_response);
+    printf("TEMP RESPONSE ANTES: %s\n",temp_response);
     (*my_token).method = strtok((*my_token).request_line, " ");
     (*my_token).URI = strtok(NULL, " ");
-    (*my_token).version = strtok(NULL, " "); 
+    (*my_token).version = strtok(NULL, " ");
+     
     //(*my_token).request_body = strtok(NULL, " ");
   //  printf("version: %s",(*my_token).version);
   //  if(strcmp((*my_token).version, "HTTP/1.1") == 0 ){
@@ -47,7 +49,10 @@ void* HTTP_handler(void* args){
     printf("RUTA ->%s\n", (*my_token).URI);
     printf("MIME ->%s\n", (*my_token).mime);
 
-            if (strcmp((*my_token).mime, ".html") == 0 || strcmp((*my_token).mime, ".htm") == 0){
+        if((*my_token).mime == NULL){
+            (*my_token).mime = "undefined";
+        }
+        if (strcmp((*my_token).mime, ".html") == 0 || strcmp((*my_token).mime, ".htm") == 0){
             response = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
         }else if (strcmp((*my_token).mime, ".css") == 0){
             response = "HTTP/1.1 200 OK\r\nContent-type: text/css\r\n\r\n";
@@ -163,10 +168,10 @@ void* HTTP_handler(void* args){
             response = "HTTP/1.1 200 OK\r\nContent-type: application/x-7z-compressed\r\n\r\n";
         }
 
-
     
     if (strcmp((*my_token).method, "GET") == 0){
         printf("Recibí un GET\n");
+    //    printf("TEMP RESPONSE DESPUES: %s\n",temp_response);
         FILE* file = fopen((*my_token).URI, "r");
 
 	    if (file == NULL) {
@@ -188,22 +193,36 @@ void* HTTP_handler(void* args){
     printf("%s",buffer_response);
     
 	fclose(file);
-    while(send((*my_token).pclient_socket, buffer_response, strlen(buffer_response), 0) == -1){
+    if(send((*my_token).pclient_socket, buffer_response, strlen(buffer_response), 0) == -1){
         perror("no se envio\n");
     }
-    while(send((*my_token).pclient_socket, temp, fsize, 0) == -1){
+    if(send((*my_token).pclient_socket, temp, fsize, 0) == -1){
         perror("no se envio\n");
     }
-    free(temp);
+    //free(temp);
     //flag = 1;
     
 
 
     }else if (strcmp((*my_token).method, "POST") == 0){
         printf("Recibí un POST\n");
-       // (*my_token).request_body = strstr(temp_response, "\r\n\r\n");
-     //   printf("BODY: /%s\n", (*my_token).request_body);
-        send((*my_token).pclient_socket,  response, strlen(response), 0);
+       // char* content_type = strstr(temp_response, "Content-Type:");
+       // content_type = strtok(content_type,"\n");
+       // content_type += 14;
+        printf("Ruta mandada: %s\n",(*my_token).URI);
+       // printf("Content Type: %s\n", content_type);
+        
+        response = "HTTP/1.1 200 OK\r\n\r\n";
+        printf("Sent response: %s\n",response);
+        
+        char* body;
+        body = strstr(temp_response, "\r\n\r\n");
+        body += 2; //BODY de la request      
+       // while(temp_response != NULL){
+       printf("Body: %s\n",body);
+      //  temp_response = strtok(NULL, "\n\n");
+      //  }
+    send((*my_token).pclient_socket, response , sizeof(response), 0);
 
     }else if(strcmp((*my_token).method, "HEAD") == 0){
         printf("Recibí un HEAD\n");
@@ -211,7 +230,7 @@ void* HTTP_handler(void* args){
         perror("HTTP/1.1 400 Bad request -> Method");
     }
     close((*my_token).pclient_socket);
-    free(temp_response);
+   // free(temp_response);
     
 }   
     
