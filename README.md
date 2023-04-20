@@ -4,6 +4,7 @@
 **Table of Contents**
 
 #Introducción
+
 La capa de aplicación de la arquitectura TCP/IP es una de las más importantes, ya que permite la comunicación entre aplicaciones a través de una red de computadoras. Esta capa incluye una variedad de protocolos, como HTTP, FTP, SMTP, DNS, entre otros, que son esenciales para el funcionamiento de internet y la transferencia de datos entre dispositivos. 
 
 Dentro de esta capa, el protocolo HTTP es uno de los más ampliamente utilizado para la transferencia de datos entre servidores y clientes en la web. Es la base de la mayoría de las aplicaciones web y permite que los usuarios puedan interactuar con los sitios web y aplicaciones. Por esta razón, es importante entender cómo funciona el protocolo HTTP y cómo se puede utilizar para crear aplicaciones web eficientes y seguras.
@@ -19,6 +20,8 @@ En resumen, este proyecto tiene como objetivo profundizar en la capa de aplicaci
 #Desarrollo
 
 #Conclusiones
+
+Del actual proyecto podemos llegar a varias conclusiones importantes como que la capa de aplicación de la arquitectura TCP/IP es fundamental para la comunicación entre aplicaciones en una red de computadoras. El protocolo HTTP es esencial para el funcionamiento de la mayoría de las aplicaciones web y permite la transferencia de datos entre servidores y clientes. La implementación de un servidor web permite entender el funcionamiento del protocolo HTTP y los conceptos fundamentales que lo rigen. Es importante estudiar los diferentes métodos HTTP, así como la transferencia de datos, la codificación de mensajes y la seguridad en la web, para desarrollar un servidor web funcional y eficiente. La exploración de tecnologías y herramientas utilizadas en el desarrollo de aplicaciones web modernas, como frameworks web y bases de datos, son importantes para desarrollar un servidor web robusto y escalable.
 
 #Referencias
 - ⭐PROTOCOLO HTTP 🖥️ Requests y Responses con: GET, POST, PUT, PATCH y DELETE | DESARROLLO WEB 🌎. (2022, abril 3). https://youtu.be/l2MihYAj0Iw
