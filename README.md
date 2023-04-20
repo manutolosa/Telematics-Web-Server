@@ -1,11 +1,6 @@
 
 # Proyecto 1
 
-**Table of Contents**
-
-[TOCM]
-
-[TOC]
 # Introducción
 
 La capa de aplicación de la arquitectura TCP/IP es una de las más importantes, ya que permite la comunicación entre aplicaciones a través de una red de computadoras. Esta capa incluye una variedad de protocolos, como HTTP, FTP, SMTP, DNS, entre otros, que son esenciales para el funcionamiento de internet y la transferencia de datos entre dispositivos. 
@@ -20,13 +15,13 @@ Además, se estudiarán las tecnologías y herramientas utilizadas en el desarro
 
 En resumen, este proyecto tiene como objetivo profundizar en la capa de aplicación de la arquitectura TCP/IP y el protocolo HTTP, y aplicar estos conocimientos para desarrollar un servidor web funcional y eficiente.
 
-## Desarrollo
+# Desarrollo
 
-### Conclusiones
+# Conclusiones
 
 Del actual proyecto podemos llegar a varias conclusiones importantes como que la capa de aplicación de la arquitectura TCP/IP es fundamental para la comunicación entre aplicaciones en una red de computadoras. El protocolo HTTP es esencial para el funcionamiento de la mayoría de las aplicaciones web y permite la transferencia de datos entre servidores y clientes. La implementación de un servidor web permite entender el funcionamiento del protocolo HTTP y los conceptos fundamentales que lo rigen. Es importante estudiar los diferentes métodos HTTP, así como la transferencia de datos, la codificación de mensajes y la seguridad en la web, para desarrollar un servidor web funcional y eficiente. La exploración de tecnologías y herramientas utilizadas en el desarrollo de aplicaciones web modernas, como frameworks web y bases de datos, son importantes para desarrollar un servidor web robusto y escalable.
 
-#### Referencias
+# Referencias
 - ⭐PROTOCOLO HTTP 🖥️ Requests y Responses con: GET, POST, PUT, PATCH y DELETE | DESARROLLO WEB 🌎. (2022, abril 3). https://youtu.be/l2MihYAj0Iw
 - POST. (s/f). Mozilla.org. Recuperado el 20 de abril de 2023, de https://developer.mozilla.org/es/docs/Web/HTTP/Methods/POST
 - Parse HTTP request line in C. (s/f). Stack Overflow. Recuperado el 20 de abril de 2023, de https://stackoverflow.com/questions/41286260/parse-http-request-line-in-c
